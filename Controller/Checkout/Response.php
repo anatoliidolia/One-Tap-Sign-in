@@ -16,6 +16,16 @@ use Magento\Framework\Exception\{InputException, LocalizedException, NoSuchEntit
 
 class Response implements ActionInterface
 {
+
+    /**
+     * @param Data $config
+     * @param RequestInterface $request
+     * @param CustomerFactory $customerFactory
+     * @param Session $customerSession
+     * @param StoreManagerInterface $storeManager
+     * @param CustomerInterfaceFactory $customerInterfaceFactory
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
+     */
     public function __construct(
         private readonly Data $config,
         private readonly RequestInterface $request,
