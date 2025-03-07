@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/App/etc/routes.xsd">
+    <router id="standard">
+        <route id="PeachCode_GoogleOneTap" frontName="PeachCode_GoogleOneTap">
+            <module name="PeachCode_GoogleOneTap" />
+        </route>
+    </router>
+</config>

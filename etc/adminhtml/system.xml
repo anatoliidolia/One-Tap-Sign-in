@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="PeachCode" translate="label" sortOrder="200">
+            <label>PeachCode Extentions</label>
+        </tab>
+        <section id="GoogleOneTap" translate="label" type="text" sortOrder="140" showInDefault="1"
+            showInWebsite="1" showInStore="1">
+            <label>One Tap Login</label>
+            <tab>PeachCode</tab>
+            <resource>PeachCode_GoogleOneTap::PeachCode_GoogleOneTap</resource>
+            <group id="status_field" translate="label" type="text" sortOrder="1" showInDefault="1"
+                showInWebsite="1" showInStore="1">
+                <label>Status</label>
+                <field id="status" translate="label" type="select" sortOrder="1" showInDefault="1"
+                    showInWebsite="1" showInStore="1">
+                    <label>Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+            </group>
+
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1"
+                showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id='client_id' translate='label' type='obscure' sortOrder='0'
+                    showInDefault='1' showInWebsite='1' showInStore='1'>
+                    <label>Client Id</label>
+                    <validate>required-entry</validate>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                </field>
+                <field id="background_click" translate="label" type="select" showInDefault="1"
+                    canRestore="1">
+                    <label>Close Prompt on Background Click</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="auto_signin" translate="label" type="select" showInDefault="1"
+                    canRestore="1">
+                    <label>Auto Sign in without Clicking Prompt</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="position" translate="label" type="select" sortOrder="10"
+                    showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Position</label>
+                    <source_model>PeachCode\GoogleOneTap\Model\Config\Source\Position</source_model>
+                    <!-- Custom source model for dropdown options -->
+                    <comment>Select an option from the dropdown.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

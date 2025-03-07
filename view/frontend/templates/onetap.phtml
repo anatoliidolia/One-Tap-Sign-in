@@ -1,0 +1,73 @@
+<?php
+
+if (!$block->isCustomerLoggedIn() && $block->isEnable()) {
+    if ($block->getClickDisable() && $block->getAutoSign()) { ?>
+        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-auto_select="true" data-itp_support="true">
+        </div>
+    <?php } elseif ($block->getClickDisable()) { ?>
+        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-itp_support="true">
+        </div>
+    <?php } elseif ($block->getAutoSign()) { ?>
+        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-auto_select="true" data-itp_support="true">
+        </div>
+    <?php } else { ?>
+        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-cancel_on_tap_outside="false" data-itp_support="true">
+        </div>
+    <?php } ?>
+    <script>
+        function googleLoginEndpoint(googleUser) {
+            // get user information from Google
+            console.log(googleUser);
+            var ajax = new XMLHttpRequest();
+            var baseUrl = window.BASE_URL;
+            var Url = baseUrl + "PeachCode_GoogleOneTap/checkout/response";
+            ajax.open("POST", Url, true);
+            ajax.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    if (this.status == 200) {
+                        window.location.reload();
+                    }
+                }
+            };
+            var formData = new FormData();
+            formData.append("id_token", googleUser.credential);
+            ajax.send(formData);
+        }
+    </script>
+
+<?php
+}
+?>
+
+<script>
+    require([
+        'jquery'
+    ], function($) {
+        $(document).ready(function() {
+            var myInterval = setInterval(function() {
+                if ($('#credential_picker_container').length) {
+                    var pos = "<?php echo $block->getPosition(); ?>";
+                    $('#credential_picker_container').addClass(pos);
+                    clearInterval(myInterval);
+                }
+            }, 100);
+        });
+    });
+</script>
+
+<style>
+    #credential_picker_container.top-left {
+        left: 20px;
+    }
+
+    #credential_picker_container.bottom-right {
+        bottom: 20px;
+        top: unset;
+    }
+
+    #credential_picker_container.bottom-left {
+        left: 20px;
+        bottom: 20px;
+        top: unset;
+    }
+</style>
