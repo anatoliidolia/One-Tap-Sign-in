@@ -10,13 +10,13 @@
             <label>One Tap Login</label>
             <tab>PeachCode</tab>
             <resource>PeachCode_GoogleOneTap::PeachCode_GoogleOneTap</resource>
-            <group id="status_field" translate="label" type="text" sortOrder="1" showInDefault="1"
+            <group id="module_status" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>Status</label>
+                <label>General</label>
                 <field id="status" translate="label" type="select" sortOrder="1" showInDefault="1"
                        showInWebsite="1" showInStore="1">
-                    <label>Status</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <label>Module Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                 </field>
             </group>
             <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1"
