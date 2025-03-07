@@ -31,7 +31,7 @@ if (!$block->isCustomerLoggedIn() && $block->isEnable()) {
     <script>
         function googleLoginEndpoint(googleUser) {
             const ajax = new XMLHttpRequest();
-            ajax.open("POST", window.BASE_URL + "PeachCode_GoogleOneTap/checkout/response", true);
+            ajax.open("POST", window.BASE_URL + "onetap-login/checkout/response", true);
             ajax.onreadystatechange = function() {
                 if (this.readyState === 4 && this.status === 200) {
                     window.location.reload();
