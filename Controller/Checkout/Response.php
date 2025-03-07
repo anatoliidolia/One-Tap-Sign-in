@@ -33,7 +33,6 @@ class Response implements ActionInterface
     public function __construct(
         private readonly Data $config,
         private readonly RequestInterface $request,
-        private readonly Google_Client $googleClient,
         private readonly CustomerFactory $customerFactory,
         private readonly Session $customerSession,
         private readonly StoreManagerInterface $storeManager,
