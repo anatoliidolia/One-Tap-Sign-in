@@ -2,10 +2,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="PeachCode" translate="label" sortOrder="200">
-            <label>PeachCode Extentions</label>
+        <tab id="PeachCode" translate="label" sortOrder="10">
+            <label>PeachCode Extensions</label>
         </tab>
-        <section id="GoogleOneTap" translate="label" type="text" sortOrder="140" showInDefault="1"
+        <section id="googleonetap" translate="label" type="text" sortOrder="140" showInDefault="1"
             showInWebsite="1" showInStore="1">
             <label>One Tap Login</label>
             <tab>PeachCode</tab>
@@ -16,10 +16,9 @@
                 <field id="status" translate="label" type="select" sortOrder="1" showInDefault="1"
                     showInWebsite="1" showInStore="1">
                     <label>Status</label>
-                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
-
             <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1"
                 showInWebsite="1" showInStore="1">
                 <label>General</label>
@@ -43,7 +42,6 @@
                     showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Position</label>
                     <source_model>PeachCode\GoogleOneTap\Model\Config\Source\Position</source_model>
-                    <!-- Custom source model for dropdown options -->
                     <comment>Select an option from the dropdown.</comment>
                 </field>
             </group>

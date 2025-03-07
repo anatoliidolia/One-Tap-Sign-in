@@ -9,6 +9,6 @@ interface DataInterface
     public const XML_BCG_CLICK = 'googleonetap/general/background_click';
     public const XML_AUTO_SIGN_IN = 'googleonetap/general/auto_signin';
     public const XML_POSITION = 'googleonetap/general/position';
-    public const XML_STATUS = 'googleonetap/general/status';
+    public const XML_STATUS = 'googleonetap/status_field/status';
 
 }

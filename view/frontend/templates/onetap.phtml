@@ -1,73 +1,56 @@
 <?php
 
+/**
+ * @var $block OneTap
+ * @var $escaper Escaper
+ */
+
+use PeachCode\GoogleOneTap\Block\OneTap;
+use Magento\Framework\Escaper;
+
 if (!$block->isCustomerLoggedIn() && $block->isEnable()) {
-    if ($block->getClickDisable() && $block->getAutoSign()) { ?>
-        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-auto_select="true" data-itp_support="true">
-        </div>
-    <?php } elseif ($block->getClickDisable()) { ?>
-        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-itp_support="true">
-        </div>
-    <?php } elseif ($block->getAutoSign()) { ?>
-        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-auto_select="true" data-itp_support="true">
-        </div>
-    <?php } else { ?>
-        <div id="g_id_onload" data-client_id="<?= $block->getClientId() ?>" data-context="signin" data-callback="googleLoginEndpoint" data-login_uri="<?php $this->getUrl('customer/account') ?>" data-cancel_on_tap_outside="false" data-itp_support="true">
-        </div>
-    <?php } ?>
+    $clientId = $escaper->escapeHtml($block->getClientId());
+    $loginUri = $escaper->escapeUrl($this->getUrl('customer/account'));
+    $autoSign = $block->getAutoSign() ? 'data-auto_select="true"' : '';
+    $cancelOnTapOutside = (!$block->getClickDisable() && !$block->getAutoSign()) ? 'data-cancel_on_tap_outside="false"' : '';
+    ?>
+
+    <div id="g_id_onload"
+         data-client_id="<?= $clientId ?>"
+         data-context="signin"
+         data-callback="googleLoginEndpoint"
+         data-login_uri="<?= $loginUri ?>"
+        <?= $autoSign ?>
+        <?= $cancelOnTapOutside ?>
+         data-itp_support="true">
+    </div>
+
     <script>
         function googleLoginEndpoint(googleUser) {
-            // get user information from Google
-            console.log(googleUser);
-            var ajax = new XMLHttpRequest();
-            var baseUrl = window.BASE_URL;
-            var Url = baseUrl + "PeachCode_GoogleOneTap/checkout/response";
-            ajax.open("POST", Url, true);
+            const ajax = new XMLHttpRequest();
+            ajax.open("POST", window.BASE_URL + "PeachCode_GoogleOneTap/checkout/response", true);
             ajax.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    if (this.status == 200) {
-                        window.location.reload();
-                    }
+                if (this.readyState === 4 && this.status === 200) {
+                    window.location.reload();
                 }
             };
-            var formData = new FormData();
+            let formData = new FormData();
             formData.append("id_token", googleUser.credential);
             ajax.send(formData);
         }
     </script>
-
-<?php
-}
-?>
+<?php } ?>
 
 <script>
-    require([
-        'jquery'
-    ], function($) {
+    require(['jquery'], function($) {
         $(document).ready(function() {
-            var myInterval = setInterval(function() {
-                if ($('#credential_picker_container').length) {
-                    var pos = "<?php echo $block->getPosition(); ?>";
-                    $('#credential_picker_container').addClass(pos);
+            let myInterval = setInterval(function() {
+                let container = $('#credential_picker_container');
+                if (container.length) {
+                    container.addClass("<?= $escaper->escapeHtml($block->getPosition()) ?>");
                     clearInterval(myInterval);
                 }
             }, 100);
         });
     });
 </script>
-
-<style>
-    #credential_picker_container.top-left {
-        left: 20px;
-    }
-
-    #credential_picker_container.bottom-right {
-        bottom: 20px;
-        top: unset;
-    }
-
-    #credential_picker_container.bottom-left {
-        left: 20px;
-        bottom: 20px;
-        top: unset;
-    }
-</style>
