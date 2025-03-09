@@ -85,4 +85,8 @@ For more details, visit the [GitHub repository](https://github.com/anatoliidolia
 
 ---
 
-This **Magento 2 extension** was built with performance, security, and user experience in mind. If you’re looking for a **reliable Google One Tap Sign-in solution**, this is the module for you! 🚀
+This **Magento 2 extension** was built with performance, security, and user experience in mind.<br> 
+If you’re looking for a **reliable Google One Tap Sign-in solution**, this is the module for you! 🚀
+
+<h3>Enjoy!</h3>
+<h6>Magento 2.4.6 - 2.4.8</h6>
