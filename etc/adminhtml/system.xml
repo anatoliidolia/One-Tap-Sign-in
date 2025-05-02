@@ -21,7 +21,7 @@
             </group>
             <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1"
                    showInWebsite="1" showInStore="1">
-                <label>General</label>
+                <label>Module Configurations</label>
                 <field id="client_id" translate="label" type="obscure" sortOrder="0"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Client Id</label>
