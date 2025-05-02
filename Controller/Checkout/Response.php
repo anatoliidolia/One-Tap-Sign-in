@@ -3,15 +3,18 @@ declare(strict_types=1);
 
 namespace PeachCode\GoogleOneTap\Controller\Checkout;
 
+use Exception;
+use PeachCode\GoogleOneTap\Model\Config\Data;
+use Google\Client as Google_Client;
+use Magento\Customer\Model\Session;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\RequestInterface;
-use Google\Client as Google_Client;
 use Magento\Customer\Model\CustomerFactory;
-use Magento\Customer\Model\Session;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Customer\Api\Data\CustomerInterfaceFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use PeachCode\GoogleOneTap\Model\Config\Data;
+use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Framework\Exception\{InputException, LocalizedException, NoSuchEntityException, State\InputMismatchException};
 
 class Response implements ActionInterface
@@ -25,6 +28,7 @@ class Response implements ActionInterface
      * @param StoreManagerInterface $storeManager
      * @param CustomerInterfaceFactory $customerInterfaceFactory
      * @param CustomerRepositoryInterface $customerRepositoryInterface
+     * @param JsonFactory $resultJsonFactory
      */
     public function __construct(
         private readonly Data $config,
@@ -33,52 +37,63 @@ class Response implements ActionInterface
         private readonly Session $customerSession,
         private readonly StoreManagerInterface $storeManager,
         private readonly CustomerInterfaceFactory $customerInterfaceFactory,
-        private readonly CustomerRepositoryInterface $customerRepositoryInterface
+        private readonly CustomerRepositoryInterface $customerRepositoryInterface,
+        private readonly JsonFactory $resultJsonFactory
     ) {}
 
     /**
-     * @throws NoSuchEntityException
-     * @throws InputMismatchException
-     * @throws LocalizedException
-     * @throws InputException
+     * @return ResultInterface
      */
-    public function execute(): void
+    public function execute(): ResultInterface
     {
-        $idToken = $this->request->getParam('id_token');
-        if (!$idToken) {
-            throw new InputException(__('Missing ID token.'));
-        }
+        $result = $this->resultJsonFactory->create();
 
-        $googleOauthClientId = $this->config->getClientId();
-        $client = new Google_Client(['client_id' => $googleOauthClientId]);
-        $payload = $client->verifyIdToken($idToken);
+        try {
+            $idToken = $this->request->getParam('id_token');
+            if (!$idToken) {
+                throw new InputException(__('Missing ID token.'));
+            }
 
-        if (!$payload || ($payload['aud'] ?? null) !== $googleOauthClientId) {
-            throw new LocalizedException(__('Invalid Google ID token.'));
-        }
+            $googleOauthClientId = $this->config->getClientId();
+            $client = new Google_Client(['client_id' => $googleOauthClientId]);
+            $payload = $client->verifyIdToken($idToken);
 
-        $email = $payload["email"] ?? null;
-        $nameParts = explode(' ', $payload["name"] ?? '');
-        $firstName = $nameParts[0] ?? 'Guest';
-        $lastName = $nameParts[1] ?? 'User';
+            if (!$payload || ($payload['aud'] ?? null) !== $googleOauthClientId) {
+                throw new LocalizedException(__('Invalid Google ID token.'));
+            }
 
-        $customer = $this->customerFactory->create();
-        $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
-        $customer->loadByEmail($email);
-
-        if (!$customer->getId()) {
-            $customer = $this->customerInterfaceFactory->create();
-            $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
-            $customer->setEmail($email);
-            $customer->setFirstname($firstName);
-            $customer->setLastname($lastName);
-            $this->customerRepositoryInterface->save($customer);
+            $email = $payload["email"] ?? null;
+            $nameParts = explode(' ', $payload["name"] ?? '');
+            $firstName = $nameParts[0] ?? 'Guest';
+            $lastName = $nameParts[1] ?? 'User';
 
             $customer = $this->customerFactory->create();
             $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
             $customer->loadByEmail($email);
-        }
 
-        $this->customerSession->setCustomerAsLoggedIn($customer);
+            if (!$customer->getId()) {
+                $customer = $this->customerInterfaceFactory->create();
+                $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
+                $customer->setEmail($email);
+                $customer->setFirstname($firstName);
+                $customer->setLastname($lastName);
+                $this->customerRepositoryInterface->save($customer);
+
+                $customer = $this->customerFactory->create();
+                $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
+                $customer->loadByEmail($email);
+            }
+
+            $this->customerSession->setCustomerAsLoggedIn($customer);
+
+            return $result->setData(['success' => true]);
+
+        } catch (Exception $e) {
+            return $result->setData([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
+
 }

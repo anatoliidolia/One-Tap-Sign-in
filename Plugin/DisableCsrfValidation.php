@@ -28,7 +28,7 @@ class DisableCsrfValidation
             return; // Skip CSRF validation
         }
 
-        if (strpos($request->getOriginalPathInfo(), 'response') !== false) {
+        if (str_contains($request->getOriginalPathInfo(), 'response')) {
             return; // Skip CSRF validation
         }
         $proceed($request, $action);
