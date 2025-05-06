@@ -31,14 +31,14 @@ class Response implements ActionInterface
      * @param JsonFactory $resultJsonFactory
      */
     public function __construct(
-        private readonly Data $config,
-        private readonly RequestInterface $request,
-        private readonly CustomerFactory $customerFactory,
-        private readonly Session $customerSession,
-        private readonly StoreManagerInterface $storeManager,
-        private readonly CustomerInterfaceFactory $customerInterfaceFactory,
-        private readonly CustomerRepositoryInterface $customerRepositoryInterface,
-        private readonly JsonFactory $resultJsonFactory
+        public readonly Data $config,
+        public readonly RequestInterface $request,
+        public readonly CustomerFactory $customerFactory,
+        public readonly Session $customerSession,
+        public readonly StoreManagerInterface $storeManager,
+        public readonly CustomerInterfaceFactory $customerInterfaceFactory,
+        public readonly CustomerRepositoryInterface $customerRepositoryInterface,
+        public readonly JsonFactory $resultJsonFactory
     ) {}
 
     /**
