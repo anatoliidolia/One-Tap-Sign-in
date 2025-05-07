@@ -8,9 +8,6 @@
 use PeachCode\GoogleOneTap\Block\OneTap;
 use Magento\Framework\Escaper;
 
-var_dump(!$block->isCustomerLoggedIn());
-var_dump($block->isEnable());
-
 if (!$block->isCustomerLoggedIn() && $block->isEnable()) {
     $clientId = $escaper->escapeHtml($block->getClientId());
     $loginUri = $escaper->escapeUrl($this->getUrl('customer/account'));
