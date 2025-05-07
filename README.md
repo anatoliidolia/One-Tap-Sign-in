@@ -75,7 +75,7 @@ Store admins have full control over authentication settings, UI design, and secu
 
 ## Installation
 ```sh
-composer require peachcode/google-one-tap
+composer require peachcode/google-one-tap:dev-main
 bin/magento module:enable PeachCode_GoogleOneTap
 bin/magento setup:upgrade
 bin/magento cache:flush
