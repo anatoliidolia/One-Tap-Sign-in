@@ -22,11 +22,12 @@ class Data implements API{
     /**
      * Get Google client ID from Config
      *
+     * @param int $websiteId
      * @return string
      */
-    public function getClientId(): string
+    public function getClientId(int $websiteId): string
     {
-        return $this->encryptor->decrypt($this->scopeConfig->getValue(API::XML_CLIENT_ID, ScopeInterface::SCOPE_STORE));
+        return $this->encryptor->decrypt($this->scopeConfig->getValue(API::XML_CLIENT_ID, ScopeInterface::SCOPE_WEBSITE, $websiteId));
     }
 
     /**
@@ -36,7 +37,7 @@ class Data implements API{
      */
     public function getClickDisable(): mixed
     {
-        return $this->scopeConfig->getValue(API::XML_BCG_CLICK, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(API::XML_BCG_CLICK, ScopeInterface::SCOPE_WEBSITE);
     }
 
     /**
@@ -46,7 +47,7 @@ class Data implements API{
      */
     public function getAutoSign(): mixed
     {
-        return $this->scopeConfig->getValue(API::XML_AUTO_SIGN_IN , ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(API::XML_AUTO_SIGN_IN , ScopeInterface::SCOPE_WEBSITE);
     }
 
     /**
@@ -56,16 +57,17 @@ class Data implements API{
      */
     public function getPosition(): mixed
     {
-        return $this->scopeConfig->getValue(API::XML_POSITION, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(API::XML_POSITION, ScopeInterface::SCOPE_WEBSITE);
     }
 
     /**
      * Get config
      *
+     * @param int $websiteId
      * @return bool
      */
-    public function isEnable(): bool
+    public function isEnable(int $websiteId): bool
     {
-        return $this->scopeConfig->isSetFlag(API::XML_STATUS, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->isSetFlag(API::XML_STATUS, ScopeInterface::SCOPE_WEBSITE, $websiteId);
     }
 }

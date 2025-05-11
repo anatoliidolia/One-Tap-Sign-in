@@ -6,24 +6,24 @@
             <label>PeachCode Extensions</label>
         </tab>
         <section id="googleonetap" translate="label" type="text" sortOrder="140" showInDefault="1"
-                 showInWebsite="1" showInStore="1">
+                 showInWebsite="1" showInStore="0">
             <label>One Tap Login</label>
             <tab>PeachCode</tab>
             <resource>PeachCode_GoogleOneTap::PeachCode_GoogleOneTap</resource>
             <group id="module_status" translate="label" type="text" sortOrder="1" showInDefault="1"
-                   showInWebsite="1" showInStore="1">
+                   showInWebsite="1" showInStore="0">
                 <label>General</label>
                 <field id="status" translate="label" type="select" sortOrder="1" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
+                       showInWebsite="1" showInStore="0">
                     <label>Module Status</label>
                     <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
                 </field>
             </group>
             <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1"
-                   showInWebsite="1" showInStore="1">
+                   showInWebsite="1" showInStore="0">
                 <label>Module Configurations</label>
                 <field id="client_id" translate="label" type="obscure" sortOrder="0"
-                       showInDefault="1" showInWebsite="1" showInStore="1">
+                       showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Client Id</label>
                     <validate>required-entry</validate>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -39,7 +39,7 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="position" translate="label" type="select" sortOrder="10"
-                       showInDefault="1" showInWebsite="1" showInStore="1">
+                       showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Position</label>
                     <source_model>PeachCode\GoogleOneTap\Model\Config\Source\Position</source_model>
                     <comment>Select an option from the dropdown.</comment>

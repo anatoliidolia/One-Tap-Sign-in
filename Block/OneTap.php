@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PeachCode\GoogleOneTap\Block;
 
 use Magento\Customer\Model\Context;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\Template;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Http\Context as AuthContext;
@@ -24,7 +25,6 @@ class OneTap extends Template
         private readonly Data $config,
         private readonly CustomerSession $customerSession,
         private readonly AuthContext $authContext,
-
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -44,10 +44,13 @@ class OneTap extends Template
      * Get Google client ID from Config
      *
      * @return string
+     * @throws LocalizedException
      */
     public function getClientId(): string
     {
-        return $this->config->getClientId();
+        $websiteId = (int)$this->_storeManager->getWebsite()->getId();
+
+        return $this->config->getClientId($websiteId);
     }
 
     /**
@@ -84,9 +87,12 @@ class OneTap extends Template
      * Prepare config
      *
      * @return bool
+     * @throws LocalizedException
      */
     public function isEnable(): bool
     {
-        return $this->config->isEnable();
+        $websiteId = (int)$this->_storeManager->getWebsite()->getId();
+
+        return $this->config->isEnable($websiteId);
     }
 }
