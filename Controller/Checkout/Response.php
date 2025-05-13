@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace PeachCode\GoogleOneTap\Controller\Checkout;
 
 use Exception;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Phrase;
 use PeachCode\GoogleOneTap\Model\Config\Data;
 use Google\Client as Google_Client;
 use Magento\Customer\Model\Session;
-use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Store\Model\StoreManagerInterface;
@@ -15,12 +18,13 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
-use Magento\Framework\Exception\{InputException, LocalizedException, NoSuchEntityException, State\InputMismatchException};
+use Magento\Framework\Exception\{InputException, LocalizedException};
 
-class Response implements ActionInterface
+class Response implements CsrfAwareActionInterface
 {
 
     /**
+     * @param RedirectFactory $resultRedirectFactory
      * @param Data $config
      * @param RequestInterface $request
      * @param CustomerFactory $customerFactory
@@ -31,6 +35,7 @@ class Response implements ActionInterface
      * @param JsonFactory $resultJsonFactory
      */
     public function __construct(
+        public readonly RedirectFactory $resultRedirectFactory,
         public readonly Data $config,
         public readonly RequestInterface $request,
         public readonly CustomerFactory $customerFactory,
@@ -96,4 +101,26 @@ class Response implements ActionInterface
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function createCsrfValidationException(
+        RequestInterface $request
+    ): ?InvalidRequestException {
+        $resultRedirect = $this->resultRedirectFactory->create();
+        $resultRedirect->setPath('*/*/');
+
+        return new InvalidRequestException(
+            $resultRedirect,
+            [new Phrase('Invalid Form Key. Please refresh the page.')]
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return null;
+    }
 }
