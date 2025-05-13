@@ -6,7 +6,6 @@ namespace PeachCode\GoogleOneTap\Controller\Checkout;
 use Exception;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\Phrase;
 use PeachCode\GoogleOneTap\Model\Config\Data;
 use Google\Client as Google_Client;
 use Magento\Customer\Model\Session;
@@ -18,7 +17,7 @@ use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
-use Magento\Framework\Exception\{InputException, LocalizedException};
+use Magento\Framework\Exception\{InputException, LocalizedException, NoSuchEntityException};
 
 class Response implements CsrfAwareActionInterface
 {
@@ -48,10 +47,12 @@ class Response implements CsrfAwareActionInterface
 
     /**
      * @return ResultInterface
+     * @throws NoSuchEntityException
      */
     public function execute(): ResultInterface
     {
         $result = $this->resultJsonFactory->create();
+        $websiteId = $this->storeManager->getStore()->getWebsiteId();
 
         try {
             $idToken = $this->request->getParam('id_token');
@@ -59,7 +60,7 @@ class Response implements CsrfAwareActionInterface
                 throw new InputException(__('Missing ID token.'));
             }
 
-            $googleOauthClientId = $this->config->getClientId();
+            $googleOauthClientId = $this->config->getClientId($websiteId);
             $client = new Google_Client(['client_id' => $googleOauthClientId]);
             $payload = $client->verifyIdToken($idToken);
 
@@ -73,12 +74,12 @@ class Response implements CsrfAwareActionInterface
             $lastName = $nameParts[1] ?? 'User';
 
             $customer = $this->customerFactory->create();
-            $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
+            $customer->setWebsiteId($websiteId);
             $customer->loadByEmail($email);
 
             if (!$customer->getId()) {
                 $customer = $this->customerInterfaceFactory->create();
-                $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
+                $customer->setWebsiteId($websiteId);
                 $customer->setEmail($email);
                 $customer->setFirstname($firstName);
                 $customer->setLastname($lastName);
@@ -102,18 +103,15 @@ class Response implements CsrfAwareActionInterface
     }
 
     /**
-     * @inheritDoc
+     * Create exception in case CSRF validation failed.
+     * Return null if default exception will suffice.
+     *
+     * @param RequestInterface $request
+     * @return InvalidRequestException|null
      */
-    public function createCsrfValidationException(
-        RequestInterface $request
-    ): ?InvalidRequestException {
-        $resultRedirect = $this->resultRedirectFactory->create();
-        $resultRedirect->setPath('*/*/');
-
-        return new InvalidRequestException(
-            $resultRedirect,
-            [new Phrase('Invalid Form Key. Please refresh the page.')]
-        );
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
     }
 
     /**
@@ -121,6 +119,6 @@ class Response implements CsrfAwareActionInterface
      */
     public function validateForCsrf(RequestInterface $request): ?bool
     {
-        return null;
+        return true;
     }
 }
