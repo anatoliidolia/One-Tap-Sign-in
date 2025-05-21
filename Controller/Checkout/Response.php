@@ -52,7 +52,7 @@ class Response implements CsrfAwareActionInterface
     public function execute(): ResultInterface
     {
         $result = $this->resultJsonFactory->create();
-        $websiteId = $this->storeManager->getStore()->getWebsiteId();
+        $websiteId = (int)$this->storeManager->getStore()->getWebsiteId();
 
         try {
             $idToken = $this->request->getParam('id_token');
