@@ -29,33 +29,13 @@ if (!$block->isCustomerLoggedIn() && $block->isEnable()) :
     </div>
 
     <!-- Google One Tap Callback Script -->
-    <script>
-        function googleLoginEndpoint(googleUser) {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", window.BASE_URL + "onetaplogin/checkout/response", true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    window.location.reload();
-                }
-            };
-            const formData = new FormData();
-            formData.append("id_token", googleUser.credential);
-            xhr.send(formData);
-        }
-    </script>
-
-    <!-- Add Position Class to Google Picker Container -->
-    <script>
-        require(['jquery'], function ($) {
-            $(function () {
-                const interval = setInterval(function () {
-                    const container = $('#credential_picker_container');
-                    if (container.length) {
-                        container.addClass("<?= $positionClass ?>");
-                        clearInterval(interval);
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "PeachCode_GoogleOneTap/js/onetap-callback": {
+                    "positionClass": "<?= $positionClass ?>"
                     }
-                }, 100);
-            });
-        });
+                }
+        }
     </script>
 <?php endif; ?>
