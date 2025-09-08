@@ -6,7 +6,6 @@ namespace PeachCode\GoogleOneTap\Block;
 use Magento\Customer\Model\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\View\Element\Template;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Http\Context as AuthContext;
 use PeachCode\GoogleOneTap\Model\Config\Data;
 
@@ -16,14 +15,12 @@ class OneTap extends Template
     /**
      * @param Template\Context $context
      * @param Data $config
-     * @param CustomerSession $customerSession
      * @param AuthContext $authContext
      * @param array $data
      */
     public function __construct(
         Template\Context $context,
         private readonly Data $config,
-        private readonly CustomerSession $customerSession,
         private readonly AuthContext $authContext,
         array $data = []
     ) {
